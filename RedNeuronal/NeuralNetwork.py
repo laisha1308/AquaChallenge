@@ -19,7 +19,8 @@ scaler = StandardScaler()
 dataset = scaler.fit_transform(dataset)
 
 # Separar los datos en entrenamiento y prueba
-dataset_train, dataset_test, labels_train, labels_test = train_test_split(dataset, labels, test_size=0.1, random_state=2)
+dataset_train, dataset_test, labels_train, labels_test = train_test_split(dataset, labels, test_size=0.1,
+                                                                          random_state=2)
 
 # Ajustar el normalizador a los datos de entrenamiento y transformarlos
 dataset_train = scaler.fit_transform(dataset_train)
@@ -61,11 +62,9 @@ class RedNeuronal(nn.Module):
         output = self.sigmoid(output)
         return output
 
-def training(model_name='model.pth'):
-    lr = 0.0001
-    epochs = 100000
-    prints = 1000
 
+def training(model_name='model', lr=0.0001, epochs=100000, prints=1000):
+    higher_accuracy = 0
     model = RedNeuronal()
     loss_fn = nn.BCELoss()
     optimizer = optim.Adam(model.parameters(), lr=lr)
@@ -94,19 +93,31 @@ def training(model_name='model.pth'):
             'Accuracy': round(accuracy.item(), 4),
         }, index=[0])
         history = pd.concat([history, df_tmp], ignore_index=True)
-    history.to_csv('resultados.csv', index=False, header=True)
-    torch.save(model.state_dict(), model_name)
 
-def print_plots():
+        # Se almacena el modelo en el punto con mayor precisión
+        if accuracy > higher_accuracy:
+            higher_accuracy = accuracy
+            history.to_csv(f'results/best_{model_name}_results.csv', index=False, header=True)
+            torch.save(model.state_dict(), f'models/best_{model_name}.pth')
+
+        if epoch % prints == 0:
+            print(f'Higher accuracy: {round(higher_accuracy.item(), 4)}%\n')
+
+    history.to_csv(f'results/{model_name}_results.csv', index=False, header=True)
+    torch.save(model.state_dict(), f'models/{model_name}.pth')
+
+
+def print_plots(model_name='model'):
     import matplotlib.pyplot as plt
     import seaborn as sns
-    df = pd.read_csv('resultados.csv')
+    df = pd.read_csv(f'results/{model_name}_results.csv')
     df = df.melt(id_vars=['Epoch'], value_vars=['Loss', 'Accuracy'])
 
     plt.figure(figsize=(12, 8))
     sns.lineplot(x='Epoch', y='value', hue='variable', data=df)
-    plt.savefig('plot.png')
+    plt.savefig(f'plots/{model_name}_plot.png')
     plt.clf()
+
 
 def create_confusion_matrix(true_labels, predicted_labels):
     # Crea la matriz de confusión
@@ -114,11 +125,12 @@ def create_confusion_matrix(true_labels, predicted_labels):
     cm = confusion_matrix(true_labels, predicted_labels)
     return cm
 
-def eval(model_name='model.pth'):
+
+def eval(model_name='model'):
     import matplotlib.pyplot as plt
     import seaborn as sns
     model = RedNeuronal()
-    model.load_state_dict(torch.load(model_name))
+    model.load_state_dict(torch.load(f'models/{model_name}.pth'))
     model.eval()
 
     with torch.no_grad():
@@ -129,15 +141,16 @@ def eval(model_name='model.pth'):
 
     cm = create_confusion_matrix(labels_test, predictions)
     sns.heatmap(cm, annot=True)
-    plt.savefig('matrix.png')
+    plt.savefig(f'plots/{model_name}_matrix.png')
     plt.clf()
 
-def predict(data, model_name='model.pth', rounded=False):
+
+def predict(data, model_name='model', rounded=False):
     # Carga el modelo
     model = RedNeuronal()
-    model.load_state_dict(torch.load(model_name))
+    model.load_state_dict(torch.load(f'models/{model_name}.pth'))
     model.eval()
-    
+
     # Normaliza los datos
     data = np.array(data).reshape(1, -1)
     data = scaler.transform(data)
