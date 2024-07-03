@@ -13,7 +13,7 @@ int ciclos = 0;
 
 void apiConnection() {
     HTTPClient http;
-    http.begin("http://192.168.3.75/ServicioRedNeuronal/iotWaterPump.php");
+    http.begin("http://192.168.1.18/ServicioRedNeuronal/iotWaterPump.php");
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
     int httpCode = http.GET();
 
@@ -32,7 +32,7 @@ void apiConnection() {
 
 void apiPrediction() {
     HTTPClient http;
-    http.begin("http://192.168.3.75/iot/iotDevicesAPI/iotGetPrediction.php");
+    http.begin("http://192.168.1.18/ServicioRedNeuronal/iotGetPrediction.php");
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
     int httpCode = http.GET();
 
