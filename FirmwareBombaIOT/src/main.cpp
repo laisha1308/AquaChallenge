@@ -4,8 +4,8 @@
 
 const int BombaPin = 2;
 
-const char* ssid = "Familia Magaña";  // Tu SSID
-const char* password = "Maganavaldes";  //Tu Clave
+const char* ssid = "SAMI-LAISHA";  // Tu SSID
+const char* password = "lluvia1972";  //Tu Clave
 
 float hD = 0;
 int rain = 0;
@@ -13,7 +13,7 @@ int ciclos = 0;
 
 void apiConnection() {
     HTTPClient http;
-    http.begin("http://192.168.1.18/ServicioRedNeuronal/iotWaterPump.php");
+    http.begin("http://192.168.137.19/ServicioRedNeuronal/iotWaterPump.php");
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
     int httpCode = http.GET();
 
@@ -32,7 +32,7 @@ void apiConnection() {
 
 void apiPrediction() {
     HTTPClient http;
-    http.begin("http://192.168.1.18/ServicioRedNeuronal/iotGetPrediction.php");
+    http.begin("http://192.168.137.19/ServicioRedNeuronal/iotGetPrediction.php");
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
     int httpCode = http.GET();
 
