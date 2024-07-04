@@ -19,14 +19,14 @@ const int FCPin = 34;
 
 DHT dht(DHTPin, DHTTYPE);
 
-const char* ssid = "Familia Magaña";  // Tu SSID
-const char* password = "Maganavaldes";  //Tu Clave
+const char* ssid = "SAMI-LAISHA";  // Tu SSID
+const char* password = "lluvia1972";  //Tu Clave
 WebServer server(80);
 
 float hD = 0;
 float hA = 0;
 float t = 0;
-float p;
+float p = 0;
 
 void handle_NotFound() {
     server.send(404, "text/plain", "La pagina no existe");
@@ -76,8 +76,8 @@ void handle_OnConnect() {
 
 void apiConection() {
     HTTPClient http;
-    String data = "ha=" + String(hA) + "&hd=" + String(hD) + "&t=" + String(t) + "&p=" + String(p);
-    http.begin("http://192.168.1.18/ServicioRedNeuronal/iotDataSensors.php");
+    String data = "ha=" + String(hA) + "&hd=" + String(hD) + "&p=" + String(p) + "&t=" + String(t);
+    http.begin("http://192.168.137.19/ServicioRedNeuronal/iotDataSensors.php");
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
     int httpCode = http.POST(data);
 
