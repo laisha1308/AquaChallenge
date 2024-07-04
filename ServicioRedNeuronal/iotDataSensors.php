@@ -13,7 +13,7 @@ $t = $_POST['t'];
 $date = date("Y-m-d");  // Obtener la fecha actual en formato YYYY-MM-DD
 $hour = date("H:i:s"); // Obtener la hora actual en formato HH:MM:SS
 
-$query = "INSERT INTO information (humiditySoil, humidityAir, temperature, pressure, date, datahour) VALUES ('$hD', '$hA', '$t', '$p', '$date', '$hour');";
+$query = "INSERT INTO information (humiditySoil, humidityAir, temperature, date, datahour, pressure) VALUES ('$hD', '$hA', '$t', '$date', '$hour', '$p');";
 echo $query;
 $result = mysqli_query($conection, $query);
 

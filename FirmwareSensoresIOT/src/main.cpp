@@ -76,7 +76,7 @@ void handle_OnConnect() {
 
 void apiConection() {
     HTTPClient http;
-    String data = "ha=" + String(hA) + "&hd=" + String(hD) + "&p=" + String(p) + "&t=" + String(t);
+    String data = "ha=" + String(hA) + "&hd=" + String(hD) + "&t=" + String(t) + "&p=" + String(p);
     http.begin("http://192.168.137.19/ServicioRedNeuronal/iotDataSensors.php");
     http.addHeader("Content-Type", "application/x-www-form-urlencoded");
     int httpCode = http.POST(data);
